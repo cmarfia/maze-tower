@@ -1,0 +1,32 @@
+name:                maze-tower
+version:             0.0.1
+synopsis:            Maze Tower will be a game to move through generated mazes 
+homepage:            https://github.com/cmarfia/maze-tower
+license:             MIT
+author:              Chris Marfia
+maintainer:          marfiadocs@gmail.com
+category:            Web
+build-type:          Simple
+cabal-version:       2.0
+
+executable maze-tower
+  main-is:             Main.hs
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  other-modules:       Maze
+                     , Views.Index
+                     , Views.NotFound
+                     , Routes
+  build-depends:       base == 4.12.*
+                     , wai
+                     , warp
+                     , http-types
+                     , scotty
+                     , text
+                     , bytestring
+                     , blaze-html
+                     , wai-middleware-static
+                     , wai-extra
+                     , time
+                     , matrix
+                     , aeson
