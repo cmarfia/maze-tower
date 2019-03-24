@@ -1,7 +1,7 @@
 void function () {
     const elem = document.getElementById("maze-tower__game");
-    const numRows = 3;
-    const numCols = 3;
+    const numRows = 5;
+    const numCols = 5;
 
     const createSVGNode = (name) => (attributes = [], children = []) => {
         const elem = document.createElementNS("http://www.w3.org/2000/svg", name);
