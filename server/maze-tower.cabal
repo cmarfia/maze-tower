@@ -17,6 +17,7 @@ executable maze-tower
                      , Views.Index
   build-depends:       base == 4.12.*
                      , wai
+                     , vault
                      , warp
                      , http-types
                      , scotty
@@ -28,3 +29,5 @@ executable maze-tower
                      , time
                      , matrix
                      , aeson
+                     , random
+                     , mtl

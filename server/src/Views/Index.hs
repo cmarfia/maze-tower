@@ -7,6 +7,7 @@ import qualified  Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import Text.Blaze.Html.Renderer.Text
 
+view :: Html
 view = do
   html $ do
     body $ do

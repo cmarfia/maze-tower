@@ -3,7 +3,6 @@ void function () {
     const numRows = 3;
     const numCols = 3;
 
-    // Render 
     const createSVGNode = (name) => (attributes = [], children = []) => {
         const elem = document.createElementNS("http://www.w3.org/2000/svg", name);
 
@@ -39,8 +38,6 @@ void function () {
                 Y
                 ↓
                 (0,N)
-            
-            Need to transpose matrix for rendering as SVG
         */
         elem.append(
             svg([['viewBox', `0 0 ${matrix[0].length} ${matrix.length}`]], [
