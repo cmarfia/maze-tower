@@ -5,7 +5,6 @@ import Web.Scotty
 import Network.HTTP.Types.Status
 import Network.Wai.Middleware.Static
 import Text.Blaze.Html.Renderer.Text
-import qualified Views.NotFound
 import qualified Views.Index
 import qualified Maze
 
@@ -18,10 +17,11 @@ routes = do
     get "/" $ do
         viewRoute Views.Index.view
 
-    get "/mazes/:width/:height" $ do
-        width <- param "width"
-        height <- param "height"
-        json $ Maze.generate height width
+    get "/mazes/:rows/:columns" $ do
+        rows <- param "rows"
+        columns <- param "columns"
+        json $ Maze.generate rows columns
 
-    notFound $ viewRoute Views.NotFound.view
+    notFound $ do
+       redirect "/"
 

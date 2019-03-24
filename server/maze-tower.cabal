@@ -15,7 +15,6 @@ executable maze-tower
   default-language:    Haskell2010
   other-modules:       Maze
                      , Views.Index
-                     , Views.NotFound
                      , Routes
   build-depends:       base == 4.12.*
                      , wai
