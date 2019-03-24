@@ -43,7 +43,7 @@ void function () {
             Need to transpose matrix for rendering as SVG
         */
         elem.append(
-            svg([['viewBox', `0 0 ${matrix.length} ${matrix[0].length}`]], [
+            svg([['viewBox', `0 0 ${matrix[0].length} ${matrix.length}`]], [
                 g([], [rect([["x", entrance.col], ["y", entrance.row], ["width", 1], ["height", 1], ["style", "fill:rgb(0,255,0)"]])]),
                 g([], [rect([["x", exit.col], ["y", exit.row], ["width", 1], ["height", 1], ["style", "fill:rgb(255,0,0)"]])]),
                 g([['fill', 'none'], ['stroke', '#000000'], ['stroke-width', '.1'], ['stroke-linecap', 'square']], [
