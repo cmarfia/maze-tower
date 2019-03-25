@@ -31,4 +31,3 @@ executable maze-tower
                      , aeson
                      , random
                      , mtl
-                     , ilist

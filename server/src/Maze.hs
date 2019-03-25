@@ -2,7 +2,6 @@
 module Maze (Maze, generate) where
 
 import System.Random
-import Data.List.Index (deleteAt)
 import qualified Data.Matrix as Matrix
 import Data.Aeson 
 import GHC.Exts
@@ -69,10 +68,13 @@ generate rows cols s0 =
         (start, s1) = startingPoint rows cols s0
         (matrix, _, s2) = generate' (Matrix.matrix rows cols $ const nullCell) [start] s1 
         deadEnds = getDeadEnds matrix
-        (entrance, remainingDeadEnds, s3) = randomizeEntrance deadEnds s2
-        exit = Point 1 0 
+        (entrance, s3) = randomizeEntrance deadEnds s2
+        (_, _, possibleExits, _) = deadEndDistancesFromPoint (Matrix.mapPos (\_ cell -> (cell, False)) matrix) [entrance] [] s3
+        maybeExit = furthestExit possibleExits
     in
-    Maze matrix start exit
+    case maybeExit of
+        Nothing -> error "erroring generating maze exit"
+        Just exit -> Maze matrix entrance exit
 
 
 generate' :: Matrix.Matrix Cell -> [Point] -> StdGen -> (Matrix.Matrix Cell, [Point], StdGen)
@@ -131,7 +133,41 @@ isDeadEnd (Cell Nothing Nothing (Just _) Nothing) = True
 isDeadEnd (Cell Nothing Nothing Nothing (Just _)) = True
 isDeadEnd (Cell _ _ _ _) = False
 
-randomizeEntrance :: [Point] -> StdGen -> (Point, [Point], StdGen)
+randomizeEntrance :: [Point] -> StdGen -> (Point, StdGen)
 randomizeEntrance points s0 =
     let (i, s1) = randomR (0, Prelude.length points - 1) s0
-    in (points !! i, deleteAt i points, s1)
+    in (points !! i, s1)
+
+
+deadEndDistancesFromPoint :: Matrix.Matrix (Cell, Bool) -> [Point] -> [(Point, Int)] -> StdGen  -> (Matrix.Matrix (Cell, Bool), [Point], [(Point, Int)], StdGen)
+deadEndDistancesFromPoint matrix (Point row col : stack) exits s0 =
+    let
+        (cell, _) = Matrix.getElem row col matrix
+        matrix' = Matrix.setElem (cell, True) (row, col) matrix
+    in
+    case untraveledPaths matrix' cell of
+        [] ->
+            if Prelude.length stack == 0 then (matrix', [], exits, s0)
+            else deadEndDistancesFromPoint matrix' stack (if isDeadEnd cell then (Point row col, Prelude.length stack) : exits else exits) s0
+        paths ->
+            let (next, s1) = pick paths s0
+            in deadEndDistancesFromPoint matrix' (next : Point row col : stack) exits s1
+
+untraveledPaths :: Matrix.Matrix (Cell, Bool) -> Cell -> [Point]
+untraveledPaths matrix (Cell up right down left) =
+    Prelude.filter (not . isVisitedCell matrix) $ catMaybes [up, right, down, left]
+
+isVisitedCell :: Matrix.Matrix (Cell, Bool) -> Point -> Bool
+isVisitedCell matrix (Point row col) =
+    case Matrix.safeGet row col matrix of
+        Nothing -> False
+        Just (_, visited) -> visited
+
+furthestExit :: [(Point, Int)] -> Maybe Point
+furthestExit [] = Nothing
+furthestExit (x : xs) = Just $ fst $ Prelude.foldl furthestExit' x xs
+
+furthestExit' :: (Point, Int) -> (Point, Int) -> (Point, Int)
+furthestExit' (cPoint, cDist) (nPoint, nDist)
+    | cDist > nDist = (cPoint, cDist)
+    | otherwise = (nPoint, nDist)
