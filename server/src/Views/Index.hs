@@ -12,4 +12,5 @@ view = do
   html $ do
     body $ do
       H.div ! A.id "maze-tower__game" $ ""
+      script ! type_ "text/javascript" ! src "/elm.js" $ ""
       script ! type_ "text/javascript" ! src "/index.js" $ ""

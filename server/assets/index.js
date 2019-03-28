@@ -1,5 +1,8 @@
 void function () {
     const elem = document.getElementById("maze-tower__game");
+    const app = Elm.Main.init({ node: elem });
+    return; // run elm app
+
     const numRows = 50;
     const numCols = 50;
 
